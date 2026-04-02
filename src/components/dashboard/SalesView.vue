@@ -16,6 +16,21 @@ const selectedQty = ref(1)
 const pendingInvoices = ref([])
 const selectedInvoice = ref(null)
 const showQRModal = ref(false)
+const searchQuery = ref('')
+
+const filteredProducts = computed(() => {
+  if (!props.products) return []
+  const term = String(searchQuery.value || '')
+    .trim()
+    .toLowerCase()
+  if (!term) return props.products
+
+  return props.products.filter((p) => {
+    const id = p.id ? String(p.id).toLowerCase() : ''
+    const name = p.name ? String(p.name).toLowerCase() : ''
+    return id.includes(term) || name.includes(term)
+  })
+})
 
 // --- LOGIC GIỎ HÀNG ---
 function selectProduct(product) {
@@ -210,8 +225,16 @@ function removeItem(inv, idx) {
       </div>
 
       <div class="product-grid flex-grow-1 overflow-auto">
+        <div class="mb-3">
+          <input
+            v-model="searchQuery"
+            type="text"
+            class="form-control form-control-sm"
+            placeholder="Tìm sản phẩm (mã hoặc tên)..."
+          />
+        </div>
         <div class="row row-cols-2 row-cols-lg-4 row-cols-xxl-5 g-3">
-          <div class="col" v-for="p in props.products" :key="p.id">
+          <div class="col" v-for="p in filteredProducts" :key="p.id">
             <div class="card h-100 product-card border-light-gray" @click="selectProduct(p)">
               <div class="ratio ratio-1x1 bg-white border-bottom">
                 <img :src="p.images[0]" class="object-fit-cover p-1" />
@@ -647,7 +670,6 @@ function removeItem(inv, idx) {
 
 /* mobile */
 @media (max-width: 576px) {
-
   .product-section {
     height: 50vh;
     padding: 10px !important;
@@ -668,7 +690,7 @@ function removeItem(inv, idx) {
   }
 
   /* quantity buttons không đè */
-  .selection-overlay input[type="number"] {
+  .selection-overlay input[type='number'] {
     width: 60px !important;
   }
 
@@ -684,5 +706,4 @@ function removeItem(inv, idx) {
     max-height: 200px;
   }
 }
-
 </style>
