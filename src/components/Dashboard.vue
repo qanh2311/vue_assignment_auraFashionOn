@@ -29,6 +29,7 @@ const {
   deleteEmployee,
   toggleUserStatus,
   addInvoice,
+  updateInvoice,
 } = useDataStore()
 
 /* ================= UI STATE ================= */
@@ -202,6 +203,16 @@ function handleAddInvoice(invoice) {
   }
 }
 
+function handleUpdateInvoice(updatedInv) {
+  try {
+    updateInvoice(updatedInv.id, updatedInv)
+    alert('Cập nhật hóa đơn thành công!')
+  } catch (e) {
+    console.error(e)
+    alert('Không thể cập nhật hóa đơn')
+  }
+}
+
 /* ================= DELETE ================= */
 const deleteItem = (id) => {
   if (confirm('Xác nhận xóa sản phẩm?')) deleteProduct(id)
@@ -291,7 +302,11 @@ function toggleSidebar() {
       </div>
 
       <div v-if="props.activeTab === 'invoices'">
-        <InvoicesView :invoices="invoices" :formatPrice="formatPrice" />
+        <InvoicesView
+          :invoices="invoices"
+          :formatPrice="formatPrice"
+          @update-invoice="handleUpdateInvoice"
+        />
       </div>
     </main>
   </div>

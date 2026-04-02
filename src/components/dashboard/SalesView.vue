@@ -147,6 +147,12 @@ function checkout() {
 }
 
 function removeItem(inv, idx) {
+  const item = inv.items[idx]
+  if (!item) return
+
+  const confirmRemove = confirm(`Xác nhận xóa "${item.product.name}" khỏi hóa đơn?`)
+  if (!confirmRemove) return
+
   inv.items.splice(idx, 1)
   recalcTotal(inv)
 }
@@ -343,9 +349,9 @@ function removeItem(inv, idx) {
                 </div>
                 <button
                   @click="removeItem(selectedInvoice, idx)"
-                  class="btn btn-link text-danger p-0"
+                  class="btn btn-sm btn-outline-danger"
                 >
-                  <i class="bi bi-trash"></i>
+                  <i class="bi bi-trash me-1"></i> XÓA
                 </button>
               </div>
             </div>

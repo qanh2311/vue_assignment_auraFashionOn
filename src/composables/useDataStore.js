@@ -370,7 +370,6 @@ const fixedInvoices = [
 ]
 
 export function useDataStore() {
-
   const storedProducts = JSON.parse(localStorage.getItem('all_products'))
 
   const products = ref(
@@ -469,6 +468,14 @@ export function useDataStore() {
     saveInvoices()
   }
 
+  const updateInvoice = (id, newData) => {
+    const index = invoices.value.findIndex((inv) => inv.id === id)
+    if (index !== -1) {
+      invoices.value.splice(index, 1, { ...invoices.value[index], ...newData })
+      saveInvoices()
+    }
+  }
+
   const carts = ref(JSON.parse(localStorage.getItem('all_user_carts')) || {})
 
   const saveCarts = () => {
@@ -536,6 +543,7 @@ export function useDataStore() {
     removeFromCart,
     clearCartSelection,
     addInvoice,
+    updateInvoice,
     getAllAccounts: () => fixedUsers,
     addProduct: (p) => {
       products.value.push({ ...p, id: Date.now().toString() })
